@@ -5,7 +5,6 @@ This is my second public resource so it will probably be broken in some way. If 
 If you do decide to make your own version of it then it would be nice if you credited me. Thanks and enjoy this resource.
 
 ***REQUIREMENTS***
-- ES_EXTENDED (1.1.0 is prefered but it should work on most of the versions)
 - ASYNC (https://github.com/esx-framework/async/releases) [ You Shoud Already have this ]
 - MYSQL-ASYNC (https://github.com/brouznouf/fivem-mysql-async/releases) [ You Shoud Already have this ]
 

@@ -1,17 +1,13 @@
---[[
 local oldPrint = print
 print = function(trash)
 	oldPrint('^7[^2KYK Warns^7] '..trash..'^0')
 end
-]]
-
-ESX = nil 
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 --[[
     Warns the player
 ]]
 RegisterCommand("warn", function(source, args, rawCommand)
+    local warnReason = table.concat(args, " ",2)
     local target = tonumber(args[1])
     local steam
 
@@ -23,18 +19,18 @@ RegisterCommand("warn", function(source, args, rawCommand)
 
     if target == nil then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
-    elseif (ESX.GetPlayerFromId(target) == nil) then
+    elseif (GetPlayerPing(target) == 0) then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
     else
-        if (args[2] == nil) then args[2] = "No Reason Specified" end
+        if (warnReason == "") then warnReason = "No Reason Specified" end
         MySQL.Async.execute("INSERT INTO user_warnings (source, target, reason, date) VALUES (@source,@target,@reason,@date)", {
             ['@source'] = GetPlayerName(source),
             ['@target'] = steam, 
-            ['@reason'] = args[2],
+            ['@reason'] = warnReason,
             ['@date'] = os.date('%d.%m.%Y')
         })
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "^1"..GetPlayerName(target).." ^7has been warned." }, color = 255,255,255 })
-        TriggerClientEvent('chat:addMessage', target, { args = { '^7[^3Warning^7]^2', "You have been warned by: ^1"..GetPlayerName(source).." ^7For: ^1"..args[2] }, color = 255,255,255 })
+        TriggerClientEvent('chat:addMessage', target, { args = { '^7[^3Warning^7]^2', "You have been warned by: ^1"..GetPlayerName(source).." ^7For: ^1"..warnReason }, color = 255,255,255 })
     end
     
 end, true)
@@ -57,7 +53,7 @@ RegisterCommand("warns", function(source, args, rawCommand)
 
     if target == nil then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
-    elseif (ESX.GetPlayerFromId(target) == nil) then
+    elseif (GetPlayerPing(target) == 0) then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
     else
         MySQL.Async.fetchAll('SELECT * FROM `user_warnings` WHERE `target` = @target', {
@@ -88,14 +84,14 @@ RegisterCommand("removewarn", function(source, args, rawCommand)
 
     if target == nil then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
-    elseif (ESX.GetPlayerFromId(target) == nil) then
+    elseif (GetPlayerPing(target) == 0) then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
     else
         MySQL.Async.execute("DELETE FROM user_warnings WHERE target = @target AND id = @id", {
             ['@target'] = steam,
             ['@id'] = args[2]
         })
-        TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Success^7]^2', "^2Removed Warn ID: "..args[2].." from "..GetPlayerName(target) }, color = 255,255,255 })
+        TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Success^7]^2', "^7Removed Warn ID: ^1"..args[2].." ^7from ^1"..GetPlayerName(target) }, color = 255,255,255 })
     end
 end, true)
 
@@ -114,12 +110,12 @@ RegisterCommand("clearWarns", function(source, args, rawCommand)
 
     if target == nil then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
-    elseif (ESX.GetPlayerFromId(target) == nil) then
+    elseif (GetPlayerPing(target) == 0) then
         TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "^1Invalid Target." }, color = 255,255,255 })
     else
         MySQL.Async.execute("DELETE FROM user_warnings WHERE target = @target", {
             ['@target'] = steam, 
         })
-        TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Success^7]^2', "^2Cleared all warns for "..GetPlayerName(target) }, color = 255,255,255 })
+        TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Success^7]^2', "^2Cleared all warns for ^1"..GetPlayerName(target) }, color = 255,255,255 })
     end
 end, true)
