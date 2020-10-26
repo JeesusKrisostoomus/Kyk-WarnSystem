@@ -1,4 +1,4 @@
-# Kyk-RedeemCodes
+# Kyk-WarnSystem
 Simple FiveM resource for warning players.
 This is my second public resource so it will probably be broken in some way. If you find any bugs/want to improve this resource you can either make a pull request/make a request in "Issues" or customise this resource to your liking. The code isn't the best either but it works for now.
 
