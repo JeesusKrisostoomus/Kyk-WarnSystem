@@ -25,3 +25,17 @@ AddEventHandler('onClientResourceStop', function(resourceName)
         TriggerEvent('chat:removeSuggestion', '/clearWarns')
     end
 end)
+
+--[[ On screen notifications ]]
+RegisterNetEvent("kyk_warnsystem:SendAlert")
+AddEventHandler("kyk_warnsystem:SendAlert", function(data)
+	DoKykWarn(data.type, data.text)
+end)
+
+function DoKykWarn(type, text)
+	SendNUIMessage({
+		action = 'notif',
+		type = type,
+		text = text
+	})
+end
